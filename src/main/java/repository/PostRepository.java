@@ -19,22 +19,14 @@ public class PostRepository {
         return Optional.ofNullable(map.get(id));
     }
 
-//    public Post save(Post post) {
-//        int newId = id.incrementAndGet();
-//        map.put(newId, post);
-//        return post;
-//    }
-
     public Post save(Post post) {
         int idd = (int) post.getId();
         if (idd == 0) {
             // добавим новый
             int newId = id.incrementAndGet();
-            map.put(newId, post);
-        } else {
-            // заменим старый
-            map.put(idd, post);
+            post.setId(newId); // присвоим id
         }
+        map.put((int) post.getId(), post);
         return post;
     }
 
