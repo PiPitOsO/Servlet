@@ -1,14 +1,13 @@
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import service.PostService;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class Main {
-    public static void main(String[] args) {
-        final var context = new AnnotationConfigApplicationContext();
-
-        final var controller = context.getBean("postController");
-
-        final var service = context.getBean(PostService.class);
-
-        final var isSame = service == context.getBean("postService");
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ServletException, IOException {
+        Class<?> aClass = Class.forName("servlet.MainServlet");
+        Servlet servlet = (Servlet) aClass.getConstructor().newInstance();
+        servlet.init(null);
+        servlet.service(null, null);
     }
 }
