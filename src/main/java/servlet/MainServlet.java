@@ -13,13 +13,10 @@ public class MainServlet extends HttpServlet {
     private PostController controller;
 
     public void init() {
-        final var repository = new PostRepositoryStubImpl();
-        final var service = new PostService(repository);
-        controller = new PostController(service);
         final var context = new AnnotationConfigApplicationContext();
-        final var controller = context.getBean("postController");
-        final var service1 = context.getBean(PostService.class);
-        final var isSame = service1 == context.getBean("postService");
+        final var repository = context.getBean("postRepository");
+        final var service = context.getBean("postService");
+        controller =(PostController) context.getBean("postController");
     }
 
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
