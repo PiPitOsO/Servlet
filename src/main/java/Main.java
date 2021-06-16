@@ -1,13 +1,25 @@
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.startup.Tomcat;
+
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ServletException, IOException {
-        Class<?> aClass = Class.forName("servlet.MainServlet");
-        Servlet servlet = (Servlet) aClass.getConstructor().newInstance();
-        servlet.init(null);
-        servlet.service(null, null);
+    public static void main(String[] args) throws IOException, LifecycleException {
+        final var tomcat = new Tomcat();
+        final var baseDir = Files.createTempDirectory("tomcat");
+        baseDir.toFile().deleteOnExit();
+        tomcat.setBaseDir(baseDir.toAbsolutePath().toString());
+
+        final var connector = new Connector();
+        connector.setPort(8080);
+        tomcat.setConnector(connector);
+
+        tomcat.getHost().setAppBase(".");
+        tomcat.addWebapp("", ".");
+
+        tomcat.start();
+        tomcat.getServer().await();
     }
 }
